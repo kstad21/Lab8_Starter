@@ -39,24 +39,22 @@ self.addEventListener('fetch', function (event) {
   /*******************************/
   // B7. TODO - Respond to the event by opening the cache using the name we gave
   //            above (CACHE_NAME)
-  self.addEventListener('fetch', function(event) {
-    event.respondWith(
-      caches.open(CACHE_NAME).then(function(cache) {
-        return cache.match(event.request).then(function(cachedResponse) {
-          // B8. TODO - If the request is in the cache, return with the cached version.
-          //            Otherwise fetch the resource, add it to the cache, and return
-          //            network response.
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          return fetch(event.request).then(function(networkResponse) {
-            cache.put(event.request, networkResponse.clone());
-            return networkResponse;
-          }).catch(function(error) {
-            console.error('Fetch failed; returning offline fallback if available.', error);
-          });
+  event.respondWith(
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.match(event.request).then(function(cachedResponse) {
+        // B8. TODO - If the request is in the cache, return with the cached version.
+        //            Otherwise fetch the resource, add it to the cache, and return
+        //            network response.
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        return fetch(event.request).then(function(networkResponse) {
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        }).catch(function(error) {
+          console.error('Fetch failed; returning offline fallback if available.', error);
         });
-      })
-    );
-  });
+      });
+    })
+  );
 });
